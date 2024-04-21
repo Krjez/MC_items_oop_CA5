@@ -4,11 +4,14 @@ import java.io.*;
 import java.net.Socket;
 import DAOs.BlockDaoInterface;
 import DAOs.MySqlBlockDao;
+import Exceptions.DaoException;
 
 /**
- *  Written by Jakub Polacek on 13-14.4. 2024
+ *  Written by Jakub Polacek on 13-14. and 21.4. 2024
  *  Used sample code from class as reference:
  *  github.com/logued/oop-client-server-multithreaded-2024
+ *
+ *  Feature 13 made by Ruby on 20.4.
  */
 
 public class ClientHandler implements Runnable
@@ -52,6 +55,13 @@ public class ClientHandler implements Runnable
                     String blockAsJson = IBlockDao.blockToJson(Integer.parseInt(message));
                     clientWriter.println(blockAsJson);
                     System.out.println("Server message: JSON string of Block by id " + message + " sent to client.");
+                }
+                else if(request.startsWith("F12"))
+                {
+                    int idToDelete = Integer.parseInt(request.substring(3));
+                    String block = IBlockDao.blockToJson(IBlockDao.deleteBlockById(idToDelete));
+                    clientWriter.println(block);
+                    System.out.println("Server message: Block by id " + idToDelete + " deleted.");
                 }
                 //by Ruby 20/4/2024
                 else if(request.substring(0,3).equals("F13")){
@@ -110,7 +120,7 @@ public class ClientHandler implements Runnable
                 }
             }
         }
-        catch (IOException ex)
+        catch (IOException | DaoException ex)
         {
             ex.printStackTrace();
         }

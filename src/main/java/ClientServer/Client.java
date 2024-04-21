@@ -30,7 +30,7 @@ public class Client
             System.out.println("Client message: The Client is running and has connected to the server");
             Scanner keyboardInput = new Scanner(System.in);
             System.out.println("Please enter a command: ");
-            System.out.println("Available commands: F9, F11, F13 quit");
+            System.out.println("Available commands: F9, F11, F12, F13 quit");
             String clientCommand = keyboardInput.nextLine();
 
             while(true)
@@ -44,16 +44,19 @@ public class Client
                     String response = in.readLine();
                     Gson gsonParser = new Gson();
                     Block block = gsonParser.fromJson(response,Block.class);
-                    //TODO make output nicer
                     if(block != null)
                     {
-                        System.out.println(block.toString());
+                        System.out.println("Name: " + block.getName());
+                        System.out.println("Hardness: " + block.getHardness());
+                        System.out.println("Blast resistance: " + block.getBlastResistance());
+                        System.out.println("Is gravity affected: " + (block.getGravityAffected()? "Yes":"No"));
                     }
                     else
                     {
-                        System.out.println("Invalid ID.");
+                        System.out.println("Invalid ID. No block found.");
                     }
                 }
+                //F11 by Ruby 20/4/2024
                 else if (clientCommand.equals("F11"))
                 {
                     System.out.println("Function 11 selected - Insert Block");
@@ -65,9 +68,19 @@ public class Client
                     out.println("F11"+blockJson);
                     String response = in.readLine();
                     System.out.println(response);
-
-                    //by Ruby 20/4/2024
                 }
+                else if(clientCommand.equals("F12"))
+                {
+                    System.out.println("Function 12 selected - Delete Block by ID");
+                    System.out.println("Please input the ID of the block to be deleted:");
+                    clientCommand = keyboardInput.nextLine();
+                    out.println("F12"+clientCommand);
+                    String response = in.readLine();
+                    Gson gsonParser = new Gson();
+                    Block block = gsonParser.fromJson(response,Block.class);
+                    System.out.println("Block deleted: " + block);
+                }
+                //F13 By Ruby 20/4/2024
                 else if (clientCommand.equals("F13")) {
                     dataInputStream = new DataInputStream(socket.getInputStream());
                     dataOutputStream = new DataOutputStream( socket.getOutputStream());
